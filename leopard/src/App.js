@@ -1,5 +1,6 @@
 import logo from "./img/logo.png";
 import "./App.css";
+import "leopard/src/firebase.js";
 
 function App() {
   return (
