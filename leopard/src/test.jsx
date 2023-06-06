@@ -10,10 +10,9 @@ import { signInWithPopup } from "firebase/auth";
 // import firebase from 'firebase';
 // import Header from "./header.jsx";
 
-function App() {
+function Test() {
   const [posts, setPosts] = useState([]);
   const [title, setTitle] = useState([]);
-  const [desc, setDesc] = useState([]);
   const credentialslog = Header.credentials;
 
   const haalDocumentenOp = () => {
@@ -35,7 +34,7 @@ function App() {
   // }
 
   const toevoegenDoc = async () => {
-    await addDoc(collection(db, "posts"), { title: title, desc: desc });
+    await addDoc(collection(db, "posts"), { title: title, desc: "Test" });
   };
   useEffect(() => {
     haalDocumentenOp();
@@ -55,13 +54,6 @@ function App() {
               placeholder="Title"
               onChange={(event) => {
                 setTitle(event.target.value);
-              }}
-            ></input>
-            <input
-              type="text"
-              placeholder="Desc"
-              onChange={(event) => {
-                setDesc(event.target.value);
               }}
             ></input>
             <button onClick={toevoegenDoc}>Add</button>
@@ -134,4 +126,4 @@ function Header() {
   );
 }
 
-export default App;
+export default Test;
