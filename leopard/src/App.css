@@ -2,36 +2,31 @@
 
   background-color: #f3f3f3;
   z-index: 1;
-}
-
-.name-bar img {
-  width: 85px;
-  z-index: 999;
-  background-color: #f0faff;
-  margin-top: 10px;
 
 }
 
-.name-bar {
- background-color: #f0faff;
- height: 8.5vh;
- padding-bottom: 15px;
- border-bottom-right-radius: 25px;
- display: flex;
- align-items: center ;
- padding-top: 5px;
+.prepost {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.name-bar p {
-  background-color: #f0faff;
-  color: rgb(68, 68, 68);
-  font-size: 35px;
-  margin-left: 10px;
-}
-
-.menu-bar {
+.post {
+  
+  width: 450px;
+  height: 200px;
+  border-radius: 10px;
   background-color: white;
-  width: 350px;
-  height: 100vh;
-  z-index: 5;
+  margin-top: 10px;
+  -webkit-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.75);
+}
+
+.remove {
+  display: none;
+}
+.logbutton{
+  display: block;
 }
