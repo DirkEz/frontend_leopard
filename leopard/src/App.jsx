@@ -23,7 +23,10 @@ function App() {
     const p = query(collection(db, "posts"));
     const l = query(collection(db, "accounts"));
     getDocs(p).then((firebaseResponse) => {
-      const lijstVanDocumenten = firebaseResponse.docs.map((doc) => ({...doc.data(), id: doc.id}));
+      const lijstVanDocumenten = firebaseResponse.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
       setPosts(lijstVanDocumenten);
     });
   };
@@ -35,7 +38,6 @@ function App() {
   function refreshPage() {
     console.log(Header.user?.uid);
     window.location.reload(false);
-    
   }
   const deletePost = async (id) => {
     const postDoc = doc(db, "posts", id);
@@ -73,19 +75,17 @@ function App() {
                           </div>
                           <div>
                             {console.log(Header.user?.uid)}
-                            {Header.user?.uid == post.uid ? (
-                              console.log("Delete")
-                            //   <div>
-                            //     <button
-                            //       className="delete"
-                            //       onClick={() => deletePost(post.id)}
-                            //     >
-                            //       Verwijder
-                            //     </button>
-                            // </div>
-                            ) : (
-                              ""
-                            )}
+                            {Header.user?.uid == post.uid
+                              ? console.log("Delete")
+                              : //   <div>
+                                //     <button
+                                //       className="delete"
+                                //       onClick={() => deletePost(post.id)}
+                                //     >
+                                //       Verwijder
+                                //     </button>
+                                // </div>
+                                ""}
                           </div>
                           {/* <img href={pic} alt="Post"/> */}
                         </div>
@@ -125,15 +125,12 @@ function Header() {
         // ...
       }
     });
-  
+
     // Clean up the  when the component unmounts
     return () => {
       fetchLogin();
     };
   }, []); // Empty dependency array to run the effect only once
-  
-  
-
 
   // useEffect(() => {
   //   setDate(moment().format('MM-DD-YYYY hh:mm:ss'));
@@ -147,7 +144,6 @@ function Header() {
       desc: desc,
       uid: userid,
     });
-
   };
 
   useEffect(() => {
@@ -212,7 +208,7 @@ function Header() {
           </div>
         ) : (
           ""
-          // console.log("test") 
+          // console.log("test")
         )}
       </div>
     </div>
