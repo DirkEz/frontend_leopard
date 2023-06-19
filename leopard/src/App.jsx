@@ -1,55 +1,199 @@
-import logo from "./img/logo.png";
 import "./App.css";
 import "./css/header.css";
 import "./firebase.jsx";
+import "./header.jsx";
 import { useEffect, useState } from "react";
-import { getDocs, query, collection, addDoc } from "firebase/firestore";
+import {
+  getDocs,
+  query,
+  collection,
+  addDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import { db } from "./firebase";
 import { googleauth, googleprovider } from "./firebase";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
-// import firebase from 'firebase';
-// import Header from "./header.jsx";
 
 function App() {
   const [posts, setPosts] = useState([]);
-  const [title, setTitle] = useState([]);
-  const [desc, setDesc] = useState([]);
-  const credentialslog = Header.credentials;
 
   const haalDocumentenOp = () => {
     const p = query(collection(db, "posts"));
     const l = query(collection(db, "accounts"));
     getDocs(p).then((firebaseResponse) => {
-      const lijstVanDocumenten = firebaseResponse.docs.map((doc) => doc.data());
+      const lijstVanDocumenten = firebaseResponse.docs.map((doc) => ({...doc.data(), id: doc.id}));
       setPosts(lijstVanDocumenten);
     });
   };
 
-  // const [curr , setCurr] = useState('');
-
-  // // Function to get time and date
-  // const getDate = () => {
-  //     const a = firebase.firestore
-  //         .Timestamp.now().toDate().toString();
-  //     setCurr(a);
-  // }
-
-  const toevoegenDoc = async () => {
-    await addDoc(collection(db, "posts"), { title: title, desc: desc });
-  };
   useEffect(() => {
     haalDocumentenOp();
-  }, []);
-  posts.map((post) => {
-    const pic = "./img/posts/" + post.foto;
   });
+
+  function refreshPage() {
+    console.log(Header.user?.uid);
+    window.location.reload(false);
+    
+  }
+  const deletePost = async (id) => {
+    const postDoc = doc(db, "posts", id);
+    console.log(postDoc);
+    await deleteDoc(postDoc);
+    haalDocumentenOp();
+  };
 
   return (
     <div className="App">
       <header className="App-header">
-        <div class="main">
+        <div className="main">
           <div>
             {<Header />}
+            {/* {credentials?.user?.displayName + "\n" } */}
+
+            {/* <div className="friend-list"></div> */}
+          </div>
+          <div className="flex">
+            <div className="view-feed">
+              <button className="refresh" onClick={refreshPage}>
+                Click to refresh!
+              </button>
+
+              <div>
+                <div className="prepost">
+                  <div>
+                    {posts.map((post) => {
+                      return (
+                        <div className="post">
+                          <h3>{post.title}</h3>
+                          <p>{post.desc}</p>
+                          <div className="footer">
+                            {post.date} {post.uid}
+                          </div>
+                          <div>
+                            {console.log(Header.user?.uid)}
+                            {Header.user?.uid == post.uid ? (
+                              console.log("Delete")
+                            //   <div>
+                            //     <button
+                            //       className="delete"
+                            //       onClick={() => deletePost(post.id)}
+                            //     >
+                            //       Verwijder
+                            //     </button>
+                            // </div>
+                            ) : (
+                              ""
+                            )}
+                          </div>
+                          {/* <img href={pic} alt="Post"/> */}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+  );
+}
+
+function Header() {
+  const [dispNameLog, setDispNameLog] = useState([]);
+  const [buttonbool, setbuttonbool] = useState([]);
+  const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [userid, setId] = useState([]);
+  const [title, setTitle] = useState([]);
+  const [desc, setDesc] = useState([]);
+  const [date, setDate] = useState([]);
+  const [postid, setPostid] = useState();
+  const auth = getAuth();
+  useEffect(() => {
+    const fetchLogin = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(user);
+        setUser(user);
+        const uid = user.uid;
+        // ...
+      } else {
+        // User is signed out
+        // ...
+      }
+    });
+  
+    // Clean up the  when the component unmounts
+    return () => {
+      fetchLogin();
+    };
+  }, []); // Empty dependency array to run the effect only once
+  
+  
+
+
+  // useEffect(() => {
+  //   setDate(moment().format('MM-DD-YYYY hh:mm:ss'));
+  //   console.log(date);
+  //   console.log(postid);
+  // }, []);
+
+  const toevoegenDoc = async () => {
+    await addDoc(collection(db, "posts"), {
+      title: title,
+      desc: desc,
+      uid: userid,
+    });
+
+  };
+
+  useEffect(() => {
+    const getPosts = async () => {
+      const data = await getDocs(collection(db, "posts"));
+      setPosts(App.lijstVanDocumenten);
+    };
+    getPosts();
+    // App.haalDocumentenOp();
+  });
+
+  const logout = async () => {
+    await signOut(auth);
+    setUser(null);
+  };
+
+  const loginwithgoogle = async () => {
+    const credentials = await signInWithPopup(googleauth, googleprovider);
+    setUser(credentials.user);
+    setId(credentials.user.uid);
+    console.log(user);
+    setbuttonbool(true);
+  };
+  return (
+    <div>
+      <div className="header">
+        <a href="#default" class="logo">
+          LeoPard
+        </a>
+        <div className="header-right">
+          {user ? (
+            <div>
+              Logged in as: <b>{user?.displayName} </b>
+              {/* {console.log(user.displayName)} */}
+              <button onClick={logout}>Logout</button>
+            </div>
+          ) : (
+            <div>
+              <button onClick={loginwithgoogle}>Login</button>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="add">
+        {user ? (
+          <div>
             <input
               type="text"
               placeholder="Title"
@@ -65,70 +209,11 @@ function App() {
               }}
             ></input>
             <button onClick={toevoegenDoc}>Add</button>
-            {/* {credentials?.user?.displayName + "\n" } */}
-
-            {/* <div className="friend-list"></div> */}
           </div>
-          <div className="view-feed">
-            <div className="prepost">
-              <div>
-                {posts.map((post) => {
-                  return (
-                    <div className="post">
-                      {post.title}
-                      {post.desc}
-                      <div className="pic">{post.picture}</div>
-
-                      <div className="footer">{post.date}</div>
-
-                      {/* <img href={pic} alt="Post"/> */}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-    </div>
-  );
-}
-
-function Header() {
-  const [credentials, setCredentials] = useState([]);
-  const [dispNameLog, setDispNameLog] = useState([]);
-  const [buttonbool, setbuttonbool] = useState([]);
-
-  useEffect(() => {
-    if (credentials?.user?.displayName == "undefined") {
-      setDispNameLog(credentials.user.displayName + "\n");
-      setbuttonbool(true);
-    } else {
-      setDispNameLog("Login");
-      setbuttonbool(false);
-    }
-  }, []);
-
-  const loginwithgoogle = async () => {
-    const credentials = await signInWithPopup(googleauth, googleprovider);
-    setCredentials(credentials);
-    console.log(credentials);
-    setbuttonbool(true);
-  };
-  return (
-    <div className="header">
-      <a href="#default" class="logo">
-        LeoPard
-      </a>
-      <div className="header-right">
-        {credentials?.user?.displayName + "\n"}
-        <button
-          classname={buttonbool}
-          disabled={buttonbool}
-          onClick={loginwithgoogle}
-        >
-          {dispNameLog}
-        </button>
+        ) : (
+          ""
+          // console.log("test") 
+        )}
       </div>
     </div>
   );
