@@ -17,7 +17,8 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 
 function App() {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([{title : "tesst"}]);
+
 
   const haalDocumentenOp = () => {
     const p = query(collection(db, "posts"));
@@ -67,6 +68,7 @@ function App() {
                       return (
                         <div className="post">
                           <h3>{post.title}</h3>
+                          <h4>{post.displayName} </h4>
                           <p>{post.desc}</p>
                           <div className="footer">
                             {post.date} {post.uid}
@@ -130,22 +132,15 @@ function Header() {
     return () => {
       fetchLogin();
     };
-  }, []); // Empty dependency array to run the effect only once
+  }, []); 
   
-  
-
-
-  // useEffect(() => {
-  //   setDate(moment().format('MM-DD-YYYY hh:mm:ss'));
-  //   console.log(date);
-  //   console.log(postid);
-  // }, []);
 
   const toevoegenDoc = async () => {
     await addDoc(collection(db, "posts"), {
       title: title,
       desc: desc,
       uid: userid,
+      displayName: user?.displayName,
     });
 
   };
@@ -157,7 +152,7 @@ function Header() {
     };
     getPosts();
     // App.haalDocumentenOp();
-  });
+  }, []);
 
   const logout = async () => {
     await signOut(auth);
