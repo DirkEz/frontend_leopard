@@ -74,17 +74,16 @@ function App() {
                             {post.date} {post.uid}
                           </div>
                           <div>
-                            {console.log(Header.user?.uid)}
                             {Header.user?.uid == post.uid ? (
-                              console.log("Delete")
-                            //   <div>
-                            //     <button
-                            //       className="delete"
-                            //       onClick={() => deletePost(post.id)}
-                            //     >
-                            //       Verwijder
-                            //     </button>
-                            // </div>
+                              console.log(Header.user?.uid)
+                              // <div>
+                              //   <button
+                              //     className="delete"
+                              //     onClick={() => deletePost(post.id)}
+                              //   >
+                              //     Verwijder
+                              //   </button>
+                              // </div>
                             ) : (
                               ""
                             )}
