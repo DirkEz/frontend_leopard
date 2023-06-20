@@ -82,5 +82,60 @@
 }
 
 
+.login-button {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-button:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  z-index: -1;
+  transition: left 0.5s;
+}
+
+.login-button:hover:before {
+  left: 0;
+}
+
+
+.delete-btn {
+  background-color: #FF4136;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.delete-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+  transform: translateX(-100%);
+  background-color: #aaa;
+}
+
+.delete-btn:hover::before {
+  transform: translateX(0);
+}
+
 
 

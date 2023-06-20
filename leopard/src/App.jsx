@@ -78,7 +78,7 @@ function App() {
                               console.log(Header.user?.uid)
                               // <div>
                               //   <button
-                              //     className="delete"
+                              //     className="delete-btn"
                               //     onClick={() => deletePost(post.id)}
                               //   >
                               //     Verwijder
@@ -180,7 +180,7 @@ function Header() {
             </div>
           ) : (
             <div>
-              <button onClick={loginwithgoogle}>Login</button>
+              <button className="login-button" onClick={loginwithgoogle}>Login</button>
             </div>
           )}
         </div>
