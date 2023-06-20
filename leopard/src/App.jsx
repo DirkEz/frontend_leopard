@@ -33,7 +33,7 @@ function App() {
 
   useEffect(() => {
     haalDocumentenOp();
-  });
+  }, []);
 
   function refreshPage() {
     console.log(Header.user?.uid);
@@ -75,18 +75,18 @@ function App() {
                             {post.date} {post.uid}
                           </div>
                           <div>
-                            {console.log(Header.user?.uid)}
-                            {Header.user?.uid == post.uid
-                              ? console.log("Delete")
-                              : //   <div>
-                                //     <button
-                                //       className="delete"
-                                //       onClick={() => deletePost(post.id)}
-                                //     >
-                                //       Verwijder
-                                //     </button>
-                                // </div>
-                                ""}
+                            {Header.user?.uid == post.uid ? (
+                              console.log(Header.user?.uid)
+                            ) : (
+                              <div>
+                                <button
+                                  className="delete"
+                                  onClick={() => deletePost(post.id)}
+                                >
+                                  Verwijder
+                                </button>
+                              </div>
+                            )}
                           </div>
                           {/* <img href={pic} alt="Post"/> */}
                         </div>
@@ -145,7 +145,7 @@ function Header() {
   useEffect(() => {
     const getPosts = async () => {
       const data = await getDocs(collection(db, "posts"));
-      setPosts(App.lijstVanDocumenten);
+      setPosts(data);
     };
     getPosts();
     // App.haalDocumentenOp();
