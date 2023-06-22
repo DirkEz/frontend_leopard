@@ -17,26 +17,27 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 
 function App() {
-  const [posts, setPosts] = useState([{title : "tesst"}]);
-
+  const [posts, setPosts] = useState([{ title: "tesst" , uid: "iTOM6xj5CWPYYFfuAAmS795b5vt2"}]);
 
   const haalDocumentenOp = () => {
     const p = query(collection(db, "posts"));
     const l = query(collection(db, "accounts"));
     getDocs(p).then((firebaseResponse) => {
-      const lijstVanDocumenten = firebaseResponse.docs.map((doc) => ({...doc.data(), id: doc.id}));
+      const lijstVanDocumenten = firebaseResponse.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
       setPosts(lijstVanDocumenten);
     });
   };
 
   useEffect(() => {
     haalDocumentenOp();
-  });
+  }, []);
 
   function refreshPage() {
     console.log(Header.user?.uid);
     window.location.reload(false);
-    
   }
   const deletePost = async (id) => {
     const postDoc = doc(db, "posts", id);
@@ -74,18 +75,18 @@ function App() {
                             {post.date} {post.uid}
                           </div>
                           <div>
-                            {Header.user?.uid == post.uid ? (
-                              console.log(Header.user?.uid)
-                              // <div>
-                              //   <button
-                              //     className="delete-btn"
-                              //     onClick={() => deletePost(post.id)}
-                              //   >
-                              //     Verwijder
-                              //   </button>
-                              // </div>
+                            {Header.user?.uid === post.uid ? (
+                              <div>
+                              <button
+                                className="delete"
+                                onClick={() => deletePost(post.id)}
+                              >
+                                Verwijder
+                              </button>
+                            </div>
+                              
                             ) : (
-                              ""
+                              console.log(Header.user?.uid) 
                             )}
                           </div>
                           {/* <img href={pic} alt="Post"/> */}
@@ -126,13 +127,12 @@ function Header() {
         // ...
       }
     });
-  
+
     // Clean up the  when the component unmounts
     return () => {
       fetchLogin();
     };
-  }, []); 
-  
+  }, []);
 
   const toevoegenDoc = async () => {
     await addDoc(collection(db, "posts"), {
@@ -141,13 +141,12 @@ function Header() {
       uid: userid,
       displayName: user?.displayName,
     });
-
   };
 
   useEffect(() => {
     const getPosts = async () => {
       const data = await getDocs(collection(db, "posts"));
-      setPosts(App.lijstVanDocumenten);
+      setPosts(data);
     };
     getPosts();
     // App.haalDocumentenOp();
@@ -206,7 +205,7 @@ function Header() {
           </div>
         ) : (
           ""
-          // console.log("test") 
+          // console.log("test")
         )}
       </div>
     </div>
