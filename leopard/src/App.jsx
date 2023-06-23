@@ -10,6 +10,7 @@ import {
   addDoc,
   deleteDoc,
   doc,
+  orderBy,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { googleauth, googleprovider } from "./firebase";
@@ -17,10 +18,9 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
 
 function App() {
-  const [posts, setPosts] = useState([{ title: "tesst" , uid: "iTOM6xj5CWPYYFfuAAmS795b5vt2"}]);
-
+  const [posts, setPosts] = useState([]);
   const haalDocumentenOp = () => {
-    const p = query(collection(db, "posts"));
+    const p = query(collection(db, "posts"), orderBy("title", "asc"));
     const l = query(collection(db, "accounts"));
     getDocs(p).then((firebaseResponse) => {
       const lijstVanDocumenten = firebaseResponse.docs.map((doc) => ({
@@ -77,16 +77,15 @@ function App() {
                           <div>
                             {Header.user?.uid === post.uid ? (
                               <div>
-                              <button
-                                className="delete"
-                                onClick={() => deletePost(post.id)}
-                              >
-                                Verwijder
-                              </button>
-                            </div>
-                              
+                                <button
+                                  className="delete"
+                                  onClick={() => deletePost(post.id)}
+                                >
+                                  Verwijder
+                                </button>
+                              </div>
                             ) : (
-                              console.log(Header.user?.uid) 
+                              console.log(Header.user?.uid)
                             )}
                           </div>
                           {/* <img href={pic} alt="Post"/> */}
@@ -179,7 +178,9 @@ function Header() {
             </div>
           ) : (
             <div>
-              <button className="login-button" onClick={loginwithgoogle}>Login</button>
+              <button className="login-button" onClick={loginwithgoogle}>
+                Login
+              </button>
             </div>
           )}
         </div>
